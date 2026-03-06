@@ -1,8 +1,29 @@
-<?php namespace App\Models; 
-use Illuminate\Database\Eloquent\Model; 
-class Setting extends Model { 
- protected $fillable = ['user_id', 'setting_key', 'setting_value', 'setting_type', 'description']; 
- public function user() { 
- return $this->belongsTo(User::class); 
- } 
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Setting extends Model
+{
+    protected $fillable = ['key', 'value', 'type'];
+
+    public static function get(string $key, $default = null)
+    {
+        $setting = static::where('key', $key)->first();
+
+        if (!$setting) {
+            return $default;
+        }
+
+        return $setting->value;
+    }
+
+    public static function set(string $key, $value, string $type = 'string'): self
+    {
+        return static::updateOrCreate(
+            ['key' => $key],
+            ['value' => $value, 'type' => $type]
+        );
+    }
 }
