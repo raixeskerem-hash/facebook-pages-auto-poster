@@ -1,0 +1,16 @@
+# Laravel .gitignore
+
+/vendor/
+/node_modules/
+/public/hot
+/public/storage
+/.env
+/.vagrant/
+
+# IDE files
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Logs
+/storage/*.log
