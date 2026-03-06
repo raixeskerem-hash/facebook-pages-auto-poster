@@ -1,25 +1,44 @@
 <?php
 
-namespace App\\Models;
+namespace App\Models;
 
-use Illuminate\\Database\\Eloquent\\Model;
+use Illuminate\Database\Eloquent\Model;
 
 class FacebookProfile extends Model
 {
-    protected $fillable = ['name', 'facebook_page_id', 'user_id', 'proxy_id'];
+    protected $fillable = [
+        'profile_name',
+        'profile_username',
+        'profile_email',
+        'profile_password',
+        'cookies',
+        'status',
+        'last_login',
+        'proxy_id',
+        'notes',
+    ];
 
-    public function user()
+    protected $casts = [
+        'last_login' => 'datetime',
+    ];
+
+    public function pages()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(FacebookPage::class, 'profile_id');
     }
 
-    public function facebookPage()
+    public function tasks()
     {
-        return $this->belongsTo(FacebookPage::class);
+        return $this->hasMany(Task::class, 'facebook_profile_id');
     }
 
     public function proxy()
     {
         return $this->belongsTo(Proxy::class);
+    }
+
+    public function activePagesCount(): int
+    {
+        return $this->pages()->where('is_active', true)->count();
     }
 }

@@ -6,17 +6,26 @@ use Illuminate\Database\Eloquent\Model;
 
 class FacebookPage extends Model
 {
-    protected $fillable = ['name', 'page_id', 'access_token'];
+    protected $fillable = [
+        'profile_id',
+        'page_id',
+        'name',
+        'followers',
+        'is_active',
+    ];
 
-    public function profiles() {
-        return $this->hasMany(FacebookProfile::class);
+    protected $casts = [
+        'is_active' => 'boolean',
+        'followers' => 'integer',
+    ];
+
+    public function profile()
+    {
+        return $this->belongsTo(FacebookProfile::class, 'profile_id');
     }
 
-    public function contents() {
-        return $this->hasMany(Content::class);
-    }
-
-    public function tasks() {
-        return $this->hasMany(Task::class);
+    public function taskPages()
+    {
+        return $this->hasMany(TaskPage::class, 'page_id');
     }
 }
