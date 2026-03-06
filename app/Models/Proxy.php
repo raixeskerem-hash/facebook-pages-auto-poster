@@ -6,11 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class Proxy extends Model
 {
-    protected $fillable = [ 'attribute1', 'attribute2', 'attribute3' ]; // Specify the fillable attributes
+    protected $fillable = [
+        'ip_address',
+        'port',
+        'username',
+        'password',
+        'status',
+    ];
 
-    // Relationship to FacebookProfile
-    public function facebookProfile()
+    public function isActive(): bool
     {
-        return $this->belongsTo(FacebookProfile::class);
+        return $this->status === 'active';
+    }
+
+    public function getFullAddress(): string
+    {
+        if ($this->username && $this->password) {
+            return $this->username . ':' . $this->password . '@' . $this->ip_address . ':' . $this->port;
+        }
+        return $this->ip_address . ':' . $this->port;
     }
 }
